@@ -52,14 +52,21 @@ class LinkedList:
                 return
 
         current = self.head
+        prev = None
 
-        while current.next is not None:
-            if current.next.value == val:
-                current.next = current.next.next
-                if not all:
-                    return
-            else:
-                current = current.next
+        while current is not None:
+            if current.value == val:
+                break
+            prev = current
+            current = current.next
+
+        if current is None:
+            return
+
+        prev.next = current.next
+
+        if all:
+            self.delete(val, all)
 
     def clean(self):
         curr = self.head
