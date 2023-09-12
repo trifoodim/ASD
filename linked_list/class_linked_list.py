@@ -34,11 +34,11 @@ class LinkedList:
 
     def find_all(self, val):
         ans = []
-        curr = self.head
-        while curr is not None:
-            if curr.value == val:
-                ans.append(curr)
-            curr = curr.next
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                ans.append(node)
+            node = node.next
 
         return ans
 
@@ -52,37 +52,34 @@ class LinkedList:
                 return
 
         current = self.head
-        prev = None
 
-        while current is not None:
-            if current.value == val:
-                break
-            prev = current
-            current = current.next
+        while current.next is not None:
+            if current.next.value == val and current.next is self.tail:
+                self.tail = current
 
-        if current is None:
-            return
-
-        prev.next = current.next
-
-        if all:
-            self.delete(val, all)
+            elif current.next.value == val:
+                current.next = current.next.next
+                if not all:
+                    return
+            else:
+                current = current.next
 
     def clean(self):
-        curr = self.head
-        while curr:
-            node_next = curr.next
-            del curr
-            curr = node_next
+        current = self.head
+        while current:
+            node_next = current.next
+            del current
+            current = node_next
 
         self.head = None
+        self.tail = None
 
     def len(self):
         counter = 0
-        curr = self.head
-        while curr is not None:
+        current = self.head
+        while current is not None:
             counter += 1
-            curr = curr.next
+            current = current.next
 
         return counter
 
