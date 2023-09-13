@@ -88,3 +88,6 @@ class LinkedList:
         else:
             newNode.next = afterNode.next
             afterNode.next = newNode
+
+        if newNode.next is None:
+            self.tail = newNode
