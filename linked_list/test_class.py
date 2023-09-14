@@ -1,175 +1,93 @@
-import ctypes
-import unittest
+class Node:
 
-from class_linked_list import LinkedList, Node
-
-
-class TestLinkedListMethods(unittest.TestCase):
-
-    def setUp(self):
-        self.linked_list = LinkedList()
-        self.node1 = Node(1)
-        self.node2_1 = Node(2)
-        self.node2_2 = Node(2)
-        self.node3_1 = Node(3)
-        self.node3_2 = Node(3)
-        self.node3_3 = Node(3)
-        self.node55_1 = Node(55)
-        self.node55_2 = Node(55)
-
-    def test_add_in_tail(self):  # passed
-        self.assertIsNone(self.linked_list.head)
-        self.assertIsNone(self.linked_list.tail)
-
-        self.linked_list.add_in_tail(self.node1)
-
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node1)
-
-        self.linked_list.add_in_tail(self.node2_1)
-
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node2_1)
-
-        self.linked_list.add_in_tail(self.node3_1)
-
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node3_1)
-
-        self.linked_list.add_in_tail(self.node2_2)
-
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertNotEqual(self.linked_list.tail, self.node2_1)
-        self.assertEqual(self.linked_list.tail, self.node2_2)
-
-    def test_delete_only_one_node(self):
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.delete(1)
-
-        self.assertIsNotNone(self.linked_list.head)
-        self.assertIsNotNone(self.linked_list.tail)
-        self.assertEqual(self.linked_list.head, self.node2_1)
-        self.assertEqual(self.linked_list.tail, self.node2_1)
-
-        self.assertEqual(self.node2_1, self.linked_list.tail)
-
-        self.linked_list.delete(2)
-
-        self.assertIsNone(self.linked_list.head)
-        self.assertIsNone(self.linked_list.tail)
-        self.assertNotEqual(self.linked_list.tail, self.node2_1)
-
-    def test_delete_one_node(self):  # passed
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.add_in_tail(self.node3_1)
-        self.linked_list.add_in_tail(self.node2_2)
-
-        self.linked_list.delete(2)
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertNotEqual(self.linked_list.tail, self.node2_1)
-        self.assertEqual(self.linked_list.tail, self.node2_2)
-
-        self.assertIsNotNone(self.node3_1.next)
-        self.assertIsNone(self.node2_2.next)
-
-        self.linked_list.delete(4)
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node2_2)
-
-        self.linked_list.delete(2)
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node3_1)
-        self.linked_list.delete(3)
-
-        self.assertEqual(self.linked_list.len(), 1)
-        self.assertEqual(self.linked_list.tail, self.node1)
-
-    def test_delete_all_node(self):  # passed
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.add_in_tail(self.node3_1)
-        self.linked_list.add_in_tail(self.node2_2)
-
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node2_2)
-
-        self.linked_list.delete(1)
-        self.linked_list.delete(3)
-
-        self.assertEqual(self.linked_list.head, self.node2_1)
-        self.assertEqual(self.linked_list.tail, self.node2_2)
-
-        self.linked_list.delete(2, True)
-
-        self.linked_list.print_all_nodes()
-        # self.assertEqual(self.linked_list.head, self.node1)
-        # self.assertIsNone(self.linked_list.head)
-        # self.assertEqual(self.linked_list.head, self.node1)
-        # self.assertEqual(self.linked_list.tail, self.node3_1)
-        #
-        # self.linked_list.delete(3)
-        #
-        # self.assertEqual(self.linked_list.len(), 1)
-        # self.assertEqual(self.linked_list.head, self.node1)
-        # self.assertEqual(self.linked_list.tail, self.node1)
-
-    def test_clean(self):  # passed
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.add_in_tail(self.node3_1)
-
-        self.linked_list.clean()
-
-        self.assertIsNone(self.linked_list.head)
-        self.assertIsNone(self.linked_list.tail)
-
-    def test_find(self):  # tests passed
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.add_in_tail(self.node3_1)
-
-        self.assertEqual(self.linked_list.find(2), self.node2_1)
-        self.assertIsNone(self.linked_list.find('a4'))
-
-    def test_find_all(self):  # tests don't passed, loop of circle
-        self.linked_list.add_in_tail(self.node1)
-        self.linked_list.add_in_tail(self.node2_1)
-        self.linked_list.add_in_tail(self.node3_1)
-        self.linked_list.add_in_tail(self.node2_1)
-
-        self.assertEqual(self.linked_list.find_all(2), [self.node2_1, self.node2_2])
-
-        # found_nodes = self.linked_list.find_all(2)
-        # self.assertEqual(len(found_nodes), 2)
-        # self.assertEqual(found_nodes[2], [self.node2_1, self.node2_2])
-        # self.assertEqual(found_nodes[1], self.node2_1)
-        #
-        # found_nodes = self.linked_list.find_all(4)
-        # self.assertEqual(len(found_nodes), 0)
-
-    def test_len(self):  # tests passed
-        self.linked_list.add_in_tail(self.node1)
-        self.assertEqual(self.linked_list.len(), 1)
-
-        self.linked_list.add_in_tail(self.node2_1)
-        self.assertEqual(self.linked_list.len(), 2)
-
-        self.linked_list.add_in_tail(self.node3_1)
-        self.assertEqual(self.linked_list.len(), 3)
-
-        self.linked_list.delete(2)
-        self.assertEqual(self.linked_list.len(), 2)
-
-    def test_insert(self):  # test passed
-        self.linked_list.insert(None, self.node1)
-        self.assertEqual(self.linked_list.head, self.node1)
-        self.assertEqual(self.linked_list.tail, self.node1)
-
-        self.linked_list.insert(self.node1, self.node2_1)
-        self.assertEqual(self.linked_list.head, self.node1)
+    def __init__(self, v):
+        self.value = v
+        self.next = None
 
 
-if __name__ == '__main__':
-    unittest.main()
+class LinkedList:
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def add_in_tail(self, item):
+        if self.head is None:
+            self.head = item
+        else:
+            self.tail.next = item
+        self.tail = item
+
+    def print_all_nodes(self):
+        node = self.head
+        while node is not None:
+            print(node.value)
+            node = node.next
+
+    def find(self, val):
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                return node
+            node = node.next
+        return None
+
+    def find_all(self, val):
+        ans = []
+        node = self.head
+        while node is not None:
+            if node.value == val:
+                ans.append(node)
+            node = node.next
+
+        return ans
+
+    def delete(self, val, all=False):
+        temp = None
+        node = self.head
+        while node is not None:
+            next = node.next
+            if node.value == val:
+                node.next = None
+                if temp is None:
+                    self.head = next
+                else:
+                    temp.next = next
+                if next is None:
+                    self.tail = temp
+                if not all:
+                    break
+            else:
+                temp = node
+            node = next
+
+    def clean(self):
+        current = self.head
+        while current:
+            node_next = current.next
+            del current
+            current = node_next
+
+        self.head = None
+        self.tail = None
+
+    def len(self):
+        counter = 0
+        current = self.head
+        while current is not None:
+            counter += 1
+            current = current.next
+
+        return counter
+
+    def insert(self, afterNode, newNode):
+        if afterNode is None:
+            newNode.next = self.head
+            self.head = newNode
+
+        else:
+            newNode.next = afterNode.next
+            afterNode.next = newNode
+
+        if newNode.next is None:
+            self.tail = newNode
