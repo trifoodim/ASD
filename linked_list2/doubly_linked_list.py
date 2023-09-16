@@ -20,6 +20,7 @@ class LinkedList2:
             item.prev = self.tail
         self.tail = item
 
+
     def find(self, val):
         node = self.head
         while node is not None:
