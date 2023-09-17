@@ -49,10 +49,12 @@ class LinkedList:
             next = node.next
             if node.value == val:
                 node.next = None
+
                 if temp is None:
                     self.head = next
                 else:
                     temp.next = next
+
                 if next is None:
                     self.tail = temp
                 if not all:
