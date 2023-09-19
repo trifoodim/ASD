@@ -4,6 +4,9 @@ class Node:
         self.value = v
         self.next = None
 
+    def __str__(self):
+        print(f'Value of node: {self.value}')
+
 
 class LinkedList:
 
