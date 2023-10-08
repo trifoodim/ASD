@@ -23,7 +23,7 @@ class HashTable:
 
     def put(self, value):
         hash_available = self.seek_slot(value)
-        if self.slots[hash_available] is not None:
+        if hash_available is not None:
             self.slots[hash_available] = value
         return None
 
