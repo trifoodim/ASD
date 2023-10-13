@@ -5,35 +5,30 @@ class HashTable:
         self.slots = [None] * self.size
 
     def hash_fun(self, value):
-        hash_key = sum(ord(element) for element in value)
-        return hash_key % self.size
+        return sum(ord(c) for c in value) % self.size
 
     def seek_slot(self, value):
-        hash_index = self.hash_fun(value)
-
+        hash_idx = self.hash_fun(value)
         for i in range(self.size):
-            if self.slots[hash_index] is None:
-                return hash_index
-
-            hash_index += self.step
-            if hash_index >= self.size:
-                hash_index %= self.size
-
+            if self.slots[hash_idx] is None:
+                return hash_idx
+            hash_idx += self.step
+            if hash_idx >= self.size:
+                hash_idx %= self.size
         return None
 
     def put(self, value):
-        hash_available = self.seek_slot(value)
-        if hash_available is not None:
-            self.slots[hash_available] = value
-        return None
+        hash_idx = self.seek_slot(value)
+        if hash_idx is not None:
+            self.slots[hash_idx] = value
+        return hash_idx
 
     def find(self, value):
-        hash_index = self.hash_fun(value)
+        hash_idx = self.hash_fun(value)
         for i in range(self.size):
-            if self.slots[hash_index] == value:
-                return hash_index
-            hash_index += self.step
-            if hash_index >= self.size:
-                hash_index %= self.size
-
+            if self.slots[hash_idx] == value:
+                return hash_idx
+            hash_idx += self.step
+            if hash_idx >= self.size:
+                hash_idx %= self.size
         return None
